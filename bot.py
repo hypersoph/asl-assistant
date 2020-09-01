@@ -1,7 +1,8 @@
 import discord
 from discord.ext import commands
-from disputils import BotEmbedPaginator
+from disputils import BotEmbedPaginator, BotConfirmation
 import json
+import logging
 
 import processing
 from scraping import HandSpeak, LifePrint
@@ -45,19 +46,27 @@ async def on_guild_remove(guild):
 @commands.has_permissions(administrator=True)
 @client.command()
 async def setprefix(ctx, prefix):
-    query = '''
-    INSERT INTO prefixes(guild, prefix) 
-    VALUES(%s, %s)
-    ON CONFLICT(guild)
-    DO UPDATE SET prefix = EXCLUDED.prefix;
-    '''
-    query_database(query, (str(ctx.guild.id), prefix))
-    await ctx.send(f'Prefix changed to: {prefix}')
+    confirmation = BotConfirmation(ctx, 0x012345)
+    await confirmation.confirm(f"Are you sure? The prefix for all commands will be set to: {prefix}")
+
+    if confirmation.confirmed:
+        query = '''
+        INSERT INTO prefixes(guild, prefix) 
+        VALUES(%s, %s)
+        ON CONFLICT(guild)
+        DO UPDATE SET prefix = EXCLUDED.prefix;
+        '''
+        query_database(query, (str(ctx.guild.id), prefix))
+        await confirmation.update(f'Prefix changed to: {prefix}', color=0x55ff55)
+    else:
+        await confirmation.update("Set prefix canceled.", hide_author=True, color=0xff5555)
+    
 
 @setprefix.error
 async def setprefix_error(error, ctx):
+    logging.error(error)
     if isinstance(error, commands.MissingPermissions):
-        text = "Sorry {}, you do not have permissions to do that!".format(ctx.message.author)
+        text = "Sorry {}, you do not have permissions to do that! Administrators only.".format(ctx.message.author)
         await ctx.send(text)
 
 @client.command()
