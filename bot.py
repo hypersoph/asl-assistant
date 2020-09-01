@@ -184,7 +184,9 @@ async def wotd(ctx):
 async def fingers(ctx):
     embed = discord.Embed(
         title="ASL Fingerspelling",
-        description="[Fingerspelling practice and more ►](https://www.lifeprint.com/asl101/fingerspelling/index.htm)",
+        description='''
+        • [Fingerspelling & Numbers: In-depth Introduction >>](https://www.lifeprint.com/asl101/fingerspelling/fingerspelling.htm)\n• [Fingerspelling practice and more >>](https://www.lifeprint.com/asl101/fingerspelling/index.htm)
+        ''',
         colour = discord.Colour.red()
     )
     embed.set_footer(text="Lifeprint.com")
