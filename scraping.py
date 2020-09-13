@@ -29,14 +29,8 @@ class HandSpeak:
         
         num_pages = int(soup.find('ul',class_='pagination').find_all('li')[-2].get_text())
 
-        results_string = ""
-        for result in results:
-            result_text = result.get_text()
-            result_url = result.get('href')
-            results_string += f"• [{result_text}](https://www.handspeak.com{result_url})\n"
-
         return {
-            'queryResults':results_string,
+            'queryResults':results,
             'numPages':num_pages
         }
     
@@ -51,8 +45,9 @@ class HandSpeak:
         video_url = url + relative_video_url
         return f"**The Word of the Day is:** `{english_equivalent}`\n{video_url}"
     
-    def makeSearchEmbed(self,description, search_input):
+    def makeSearchEmbed(self,results, search_input):
         query_formatted = '+'.join(search_input.split())
+        description = processing.search_result_list(results, source="hs")
         embed = Embed(
             title = f"Search results: {search_input}",
             description=description,
@@ -91,7 +86,7 @@ class LifePrint:
         query = f'''
         SELECT * from lifeprint_vids
         WHERE phrase
-        LIKE '%{search_input}%'
+        ~* '\y{search_input}\y'
         '''
         search_results = self.sqlQuery(query)
         return search_results

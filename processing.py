@@ -1,14 +1,21 @@
 from discord import Embed, Colour
 
-def search_result_list(search_results):
+def search_result_list(search_results, source=""):
     num_results = len(search_results)
     processed_results = ""
     if num_results == 0:
         return "No results found."
-    for result in search_results:
-        phrase = result[0]
-        video_url = result[1]
-        processed_results += f"• [{phrase}]({video_url})\n"
+    
+    if source == "":
+        for result in search_results:
+            phrase = result[0]
+            video_url = result[1]
+            processed_results += f"• [{phrase}]({video_url})\n"
+    elif source == "hs":
+        for result in search_results:
+                result_text = result.get_text()
+                result_url = result.get('href')
+                processed_results += f"• [{result_text}](https://www.handspeak.com{result_url})\n"
 
     return processed_results
 

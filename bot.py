@@ -151,9 +151,16 @@ async def sign(ctx, *args):
         #if len(results_lp) > 10 or results_hs['numPages'] > 1:
         #    embeds = []
             # pagination
+        if len(results_lp) > 15:
+            list_string_lp = processing.search_result_list(results_lp[:15])
+        else:
+            list_string_lp = processing.search_result_list(results_lp)
 
-        list_string_lp = processing.search_result_list(results_lp)
-        list_string_hs = results_hs['queryResults']
+        if len(results_hs['queryResults']) > 10:
+            list_string_hs = processing.search_result_list(results_hs['queryResults'][:10], source="hs")
+            list_string_hs = list_string_hs[:1028]
+        else:
+            list_string_hs = processing.search_result_list(results_hs['queryResults'], source="hs")
 
         query_formatted = '+'.join(search_input.split())
 
@@ -170,6 +177,7 @@ async def sign(ctx, *args):
 
 @sign.error
 async def sign_error(ctx, error):
+    logging.error(error)
     prefix = ctx.prefix
     if isinstance(error, commands.UserInputError):
         await ctx.send(f"Please specify words to search. Eg. `{prefix}sign dog`")
