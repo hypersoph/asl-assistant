@@ -4,6 +4,7 @@ import psycopg2
 import settings
 from discord import Embed, Colour
 import processing
+import re
 
 class HandSpeak:
     def search(self, input, current_page=1):
@@ -37,11 +38,12 @@ class HandSpeak:
     def wordOfTheDay(self):
         url = "https://www.handspeak.com"
         response = requests.request(method="GET",url=url)
-
         soup = BeautifulSoup(response.text, 'html.parser')
-        wotd_section = soup.find_all('section')[1]
+        
+        wotd_section = soup.find_all('section')[0]
         relative_video_url = wotd_section.find('video').get('src')
-        english_equivalent = wotd_section.find('span', class_='asl').get_text().upper()
+        english_equivalent = wotd_section.find('span', class_='tip-line').get('data-tip')
+        english_equivalent = re.sub('English translation: ', '', english_equivalent)
         video_url = url + relative_video_url
         return f"**The Word of the Day is:** `{english_equivalent}`\n{video_url}"
     
