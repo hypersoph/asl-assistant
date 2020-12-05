@@ -40,7 +40,7 @@ class HandSpeak:
         response = requests.request(method="GET",url=url)
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        wotd_section = soup.find_all('section')[0]
+        wotd_section = soup.find_all('section', class_="post")[0]
         relative_video_url = wotd_section.find('video').get('src')
         english_equivalent = soup.find('span', class_='tip-line').get('data-tip')
         english_equivalent = re.sub('English translation: ', '', english_equivalent)
@@ -92,7 +92,5 @@ class LifePrint:
         '''
         search_results = self.sqlQuery(query)
         return search_results
-        
-    
 
             
