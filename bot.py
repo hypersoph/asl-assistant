@@ -8,7 +8,7 @@ import processing
 from scraping import HandSpeak, LifePrint
 import settings
 from connections import query_database
-    
+
 def get_prefix(bot, message):
     default_prefix = settings.command_prefix
     if not message.guild:
@@ -43,6 +43,10 @@ async def on_guild_remove(guild):
     '''
     query_database(query)
 
+@client.command()
+async def ping(ctx):
+    await ctx.send('Pong! {0} ms'.format(round(client.latency*1000)))
+    
 @commands.has_permissions(administrator=True)
 @client.command()
 async def setprefix(ctx, prefix):
