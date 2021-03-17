@@ -1,8 +1,9 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from disputils import BotEmbedPaginator, BotConfirmation
 import json
-import logging
+from datetime import datetime as dt, timedelta
+from asyncio import sleep
 
 import processing
 from scraping import HandSpeak, LifePrint
@@ -32,9 +33,16 @@ client.remove_command('help')
 
 @client.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('We have logged in as {0.user}\n'.format(client))
     prefix = settings.command_prefix
     await client.change_presence(activity=discord.Game(f"{prefix}help"))
+    # get time until 00:00 in GMT
+    time = dt.combine(
+        dt.now().date() + timedelta(days=1), dt.strptime("000","%H%M").time()
+    ) - dt.now()
+    await sleep(time.seconds)
+    recurring_wotd.start()
+    
 
 @client.event
 async def on_guild_remove(guild):
@@ -42,6 +50,14 @@ async def on_guild_remove(guild):
     DELETE FROM prefixes WHERE guild = '{str(guild.id)}'
     '''
     query_database(query)
+
+@tasks.loop(hours = 24)
+async def recurring_wotd():
+    if client.get_guild(553026362550648858):
+        hs = HandSpeak()
+        wotd_video = hs.wordOfTheDay()
+        channel = client.get_channel(684921853915168770)
+        await channel.send(wotd_video)
 
 @client.command()
 async def ping(ctx):
