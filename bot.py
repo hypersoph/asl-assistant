@@ -38,7 +38,7 @@ async def on_ready():
     prefix = settings.command_prefix
     await client.change_presence(activity=discord.Game(f"{prefix}help"))
     time = dt.combine(
-        dt.today() + timedelta(days=1), dt.strptime("500","%H%M").time()
+        dt.today() + timedelta(days=1), dt.strptime("900","%H%M").time()
     )
     await sleep_until(time)
     recurring_wotd.start()
