@@ -3,6 +3,7 @@ from discord.utils import sleep_until
 from discord.ext import commands, tasks
 from disputils import BotEmbedPaginator, BotConfirmation
 import json
+import logging
 from datetime import datetime as dt, timedelta
 
 import processing
@@ -36,7 +37,10 @@ async def on_ready():
     print('We have logged in as {0.user}\n'.format(client))
     prefix = settings.command_prefix
     await client.change_presence(activity=discord.Game(f"{prefix}help"))
-    await sleep_until(dt.strptime("000","%H%M"))
+    time = dt.combine(
+        dt.today() + timedelta(days=1), dt.strptime("500","%H%M").time()
+    )
+    await sleep_until(time)
     recurring_wotd.start()
     
 
