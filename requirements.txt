@@ -1,6 +1,6 @@
-discord.py
-requests
+discord.py==1.4.1
+requests==2.24.0
 bs4
 psycopg2
-disputils
+disputils==0.2.0
 dblpy
