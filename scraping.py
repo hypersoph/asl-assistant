@@ -42,8 +42,8 @@ class HandSpeak:
         
         wotd_section = soup.find_all('section', class_="post")[1]
         relative_video_url = wotd_section.find('video').get('src')
-        english_equivalent = soup.find('span', class_='tip-line').get('data-tip')
-        english_equivalent = re.sub('English translation: ', '', english_equivalent)
+        english_equivalent = soup.find('span', class_='tiptranslate').get_text()
+        english_equivalent = re.sub('Meaning: ', '', english_equivalent)
         video_url = url + relative_video_url
         return f"**The Word of the Day is:** `{english_equivalent}`\n{video_url}"
     
