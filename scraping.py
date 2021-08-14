@@ -35,9 +35,17 @@ class HandSpeak:
             'numPages':num_pages
         }
     
-    def wordOfTheDay(self):
+    def wordOfTheDay(self, id):
+        session = requests.session()
+
         url = "https://www.handspeak.com"
-        response = requests.request(method="GET",url=url)
+        response = session.get(url)
+
+        headers = {'Referer': url,
+                   'Accept': '*/*',
+                   'Accept-Encoding': 'identity;q=1, *;q=0', 
+                   'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.131 Safari/537.36 Edg/92.0.902.67'}
+
         soup = BeautifulSoup(response.text, 'html.parser')
         
         wotd_section = soup.find_all('section', class_="post")[1]
@@ -45,8 +53,13 @@ class HandSpeak:
         english_equivalent = soup.find('span', class_='tiptranslate').get_text()
         english_equivalent = re.sub('Meaning: ', '', english_equivalent)
         video_url = url + relative_video_url
-        return f"**The Word of the Day is:** `{english_equivalent}`\n{video_url}"
-    
+        video_request = session.get(video_url, stream=True, headers=headers)
+
+        with open(f"{id}_wotd.mp4", "wb") as file:
+            for chunk in video_request.iter_content(chunk_size=1024):
+                file.write(chunk)
+        return f"**The Word of the Day is:** `{english_equivalent}`"
+
     def makeSearchEmbed(self,results, search_input):
         query_formatted = '+'.join(search_input.split())
         description = processing.search_result_list(results, source="hs")

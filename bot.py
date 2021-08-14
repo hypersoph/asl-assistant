@@ -203,10 +203,13 @@ async def sign_error(ctx, error):
         await ctx.send(f"Please specify words to search. Eg. `{prefix}sign dog`")
 
 @client.command()
+@commands.cooldown(1, 3, commands.BucketType.guild)
 async def wotd(ctx):
     hs = HandSpeak()
-    wotd_video = hs.wordOfTheDay()
-    await ctx.send(wotd_video)
+    message = hs.wordOfTheDay(ctx.guild.id)
+
+    file = open(f"{ctx.guild.id}_wotd.mp4", "rb")
+    await ctx.send(content = message, file = discord.File(file))
 
 @client.command(aliases=['fingerspelling','fs','alphabet'])
 async def fingers(ctx):
