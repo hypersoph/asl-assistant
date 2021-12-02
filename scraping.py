@@ -48,7 +48,7 @@ class HandSpeak:
 
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        wotd_section = soup.find_all('section', class_="post")[1]
+        wotd_section = soup.find_all('section', class_="post")[0]
         relative_video_url = wotd_section.find('video').get('src')
         english_equivalent = soup.find('span', class_='tiptranslate').get_text()
         english_equivalent = re.sub('Meaning: ', '', english_equivalent)
