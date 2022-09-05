@@ -48,14 +48,14 @@ class HandSpeak:
 
         soup = BeautifulSoup(response.text, 'html.parser')
         
-        wotd_section = soup.find_all('section', class_="post")[0]
-        relative_video_url = wotd_section.find('video').get('src')
+        wotd_vid_element = soup.select('#signofday + section video')[0]
+        relative_video_url = wotd_vid_element.get('src')
         english_equivalent = soup.find('span', class_='tiptranslate').get_text()
         english_equivalent = re.sub('Meaning: ', '', english_equivalent)
         video_url = url + relative_video_url
         video_request = session.get(video_url, stream=True, headers=headers)
 
-        with open(f"{id}_wotd.mp4", "wb") as file:
+        with open(f"wotd.mp4", "wb") as file:
             for chunk in video_request.iter_content(chunk_size=1024):
                 file.write(chunk)
         return f"**The Word of the Day is:** `{english_equivalent}`"
