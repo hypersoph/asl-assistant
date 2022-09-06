@@ -2,9 +2,9 @@ import requests
 from bs4 import BeautifulSoup
 import psycopg2
 import settings
-from discord import Embed, Colour
 import processing
 import re
+from interactions import Embed
 
 class HandSpeak:
     def search(self, input, current_page=1):
@@ -65,8 +65,7 @@ class HandSpeak:
         description = processing.search_result_list(results, source="hs")
         embed = Embed(
             title = f"Search results: {search_input}",
-            description=description,
-            colour= Colour.blue()
+            description=description
         )
         embed.set_footer(text="HandSpeak.com",icon_url="https://i.imgur.com/TBq0Afu.png")
         embed.add_field(name='Additional info',value=f'[See Google search results ⯈](https://www.google.com/search?hl=en&q=site%3Ahandspeak.com+{query_formatted})')

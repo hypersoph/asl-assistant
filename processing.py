@@ -1,4 +1,4 @@
-from discord import Embed, Colour
+from interactions import Embed
 
 def search_result_list(search_results, source=""):
     num_results = len(search_results)
@@ -43,8 +43,7 @@ def make_search_embed(search_input, processed_results):
     query_formatted = '+'.join(search_input.split())
     embed = Embed(
         title=f"Search results: {search_input}",
-        description=processed_results,
-        colour=Colour.red()
+        description=processed_results
     )
     embed.set_footer(text="Lifeprint.com",
                      icon_url="https://i.imgur.com/OreZulQ.png")
