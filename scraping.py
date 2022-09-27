@@ -58,7 +58,7 @@ class HandSpeak:
         with open(f"wotd.mp4", "wb") as file:
             for chunk in video_request.iter_content(chunk_size=1024):
                 file.write(chunk)
-        return f"**The Word of the Day is:** `{english_equivalent}`"
+        return f"**The Word of the Day is:** ||{english_equivalent}||"
 
     def makeSearchEmbed(self,results, search_input):
         query_formatted = '+'.join(search_input.split())
