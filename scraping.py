@@ -8,7 +8,7 @@ from interactions import Embed
 
 class HandSpeak:
     def search(self, input, current_page=1):
-        url = "https://www.handspeak.com/word/search/app/app-dictionary.php"
+        url = settings.HS_API_URL
         payload = f'page={current_page}&query={input}'
         headers = {
         'Accept': '*/*',
@@ -50,7 +50,7 @@ class HandSpeak:
         
         wotd_vid_element = soup.select('#signofday + section video')[0]
         relative_video_url = wotd_vid_element.get('src')
-        english_equivalent = soup.find('span', class_='tiptranslate').get_text()
+        english_equivalent = soup.find('span', class_='tip-line').get_attribute_list('data-tip')[0]
         english_equivalent = re.sub('Meaning: ', '', english_equivalent)
         video_url = url + relative_video_url
         video_request = session.get(video_url, stream=True, headers=headers)
