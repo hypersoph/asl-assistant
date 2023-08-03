@@ -27,7 +27,7 @@ async def wotd(ctx):
     hs = HandSpeak()
     message = hs.wordOfTheDay(ctx.guild.id)
 
-    file = interactions.File("wotd.mp4")
+    file = interactions.File("@.mp4")
     await command_send(ctx, content=message, files=file)
 
 

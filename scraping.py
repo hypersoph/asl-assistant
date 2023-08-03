@@ -55,7 +55,7 @@ class HandSpeak:
         video_url = url + relative_video_url
         video_request = session.get(video_url, stream=True, headers=headers)
 
-        with open(f"wotd.mp4", "wb") as file:
+        with open(f"@.mp4", "wb") as file:
             for chunk in video_request.iter_content(chunk_size=1024):
                 file.write(chunk)
         return f"**The Word of the Day is:** ||{english_equivalent}||"
