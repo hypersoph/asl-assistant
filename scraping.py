@@ -1,6 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-import psycopg2
+import connections
 import settings
 import processing
 import re
@@ -72,18 +72,6 @@ class HandSpeak:
         return embed
 
 class LifePrint:
-    hostname = settings.DB_SETTINGS['host']
-    username = settings.DB_SETTINGS['user']
-    password = settings.DB_SETTINGS['password']
-    database = settings.DB_SETTINGS['db']
-
-    def sqlQuery(self, query):
-        conn = psycopg2.connect( host=self.hostname, user=self.username, password=self.password, dbname=self.database )
-        cur = conn.cursor()
-        cur.execute(query)
-        rows = cur.fetchall()
-        conn.close()
-        return rows
 
     def randomVid(self):
         query = """
@@ -91,7 +79,7 @@ class LifePrint:
         ORDER BY RANDOM()
         LIMIT 1
         """
-        rows = self.sqlQuery(query)
+        rows = connections.query_database(query)
         
         selected_vid = rows[0][0]
         return selected_vid
@@ -102,7 +90,7 @@ class LifePrint:
         WHERE phrase
         ~* '\y{search_input}\y'
         '''
-        search_results = self.sqlQuery(query)
+        search_results = connections.query_database(query)
         return search_results
 
             
