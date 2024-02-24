@@ -1,5 +1,6 @@
 import interactions
 from interactions.ext.files import command_send
+from connections import DataBase
 
 import processing
 from scraping import HandSpeak, LifePrint
@@ -12,7 +13,8 @@ client = interactions.Client(settings.token,
                                          name="/help", type=interactions.PresenceActivityType.LISTENING)
                                  ]
                              ))
-
+database = DataBase()
+lp = LifePrint(database)
 
 @client.event
 async def on_ready():
@@ -34,7 +36,6 @@ async def wotd(ctx):
 @client.command(name="randomsign",
                 description="Send a random ASL sign from Lifeprint")
 async def randomsign(ctx):
-    lp = LifePrint()
     await ctx.send(lp.randomVid())
 
 
@@ -50,7 +51,6 @@ async def randomsign(ctx):
         )]
 )
 async def sign(ctx, search_input):
-    lp = LifePrint()
     hs = HandSpeak()
 
     results_lp = lp.search(search_input)

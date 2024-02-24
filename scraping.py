@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import connections
 import settings
 import processing
 import re
@@ -72,6 +71,9 @@ class HandSpeak:
         return embed
 
 class LifePrint:
+    
+    def __init__(self, database) -> None:
+        self.database = database
 
     def randomVid(self):
         query = """
@@ -79,7 +81,7 @@ class LifePrint:
         ORDER BY RANDOM()
         LIMIT 1
         """
-        rows = connections.query_database(query)
+        rows = self.database.query_database(query)
         
         selected_vid = rows[0][0]
         return selected_vid
@@ -90,7 +92,7 @@ class LifePrint:
         WHERE phrase
         ~* '\y{search_input}\y'
         '''
-        search_results = connections.query_database(query)
+        search_results = self.database.query_database(query)
         return search_results
 
             
