@@ -6,6 +6,7 @@ hostname = settings.DB_SETTINGS['host']
 username = settings.DB_SETTINGS['user']
 password = settings.DB_SETTINGS['password']
 database = settings.DB_SETTINGS['db']
+port = settings.DB_SETTINGS['port']
 
 class DataBase:
 
@@ -13,7 +14,8 @@ class DataBase:
         self.pool = pool.SimpleConnectionPool(5, 20, user=username,
                         password=password,
                         host=hostname,
-                        database=database)
+                        database=database,
+                        port=port)
 
     def query_database(self, query: str):
         ps_connection = self.pool.getconn()

@@ -1,4 +1,5 @@
 settings.py
+settings_old.py
 *.mp4
 
 # Byte-compiled / optimized / DLL files
