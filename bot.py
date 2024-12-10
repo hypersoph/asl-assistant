@@ -21,18 +21,6 @@ async def on_ready():
     print('We have logged in.')
 
 
-@client.command(
-    name="wotd",
-    description="Send the ASL Word of the Day from HandSpeak"
-)
-async def wotd(ctx):
-    hs = HandSpeak()
-    message = hs.wordOfTheDay(ctx.guild.id)
-
-    file = interactions.File("@.mp4")
-    await command_send(ctx, content=message, files=file)
-
-
 @client.command(name="randomsign",
                 description="Send a random ASL sign from Lifeprint")
 async def randomsign(ctx):
