@@ -44,22 +44,23 @@ async def sign(ctx, search_input):
     results_lp = lp.search(search_input)
     results_hs = hs.search(search_input)
 
-    # if len(results_lp) > 10 or results_hs['numPages'] > 1:
-    #    embeds = []
-    # pagination
+    # Process Lifeprint results
     if len(results_lp) > 15:
         list_string_lp = processing.search_result_list(results_lp[:15])
     else:
         list_string_lp = processing.search_result_list(results_lp)
 
+    list_string_lp = list_string_lp[:1024]  # Ensure it does not exceed the limit
+
+    # Process Handspeak results
     if len(results_hs['queryResults']) > 10:
         list_string_hs = processing.search_result_list(
             results_hs['queryResults'][:10], source="hs")
-        list_string_hs = list_string_hs[:1028]
     else:
         list_string_hs = processing.search_result_list(
             results_hs['queryResults'], source="hs")
 
+    list_string_hs = list_string_hs[:1024]  # Ensure it does not exceed the limit
     query_formatted = '+'.join(search_input.split())
 
     embed = interactions.Embed(
