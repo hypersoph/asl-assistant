@@ -23,7 +23,7 @@ class HandSpeak:
             results = soup.find('ul',class_='col-abc').find_all('a') 
         except:
             return {
-                'queryResults':"No results found.",
+                'queryResults':[],
                 'numPages':0
             }
         

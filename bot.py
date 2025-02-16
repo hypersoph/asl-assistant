@@ -6,6 +6,10 @@ import processing
 from scraping import HandSpeak, LifePrint
 import settings
 
+import logging
+
+logging.basicConfig(level=logging.INFO)
+
 client = interactions.Client(settings.token,
                              presence=interactions.ClientPresence(
                                  activities=[
@@ -44,23 +48,31 @@ async def sign(ctx, search_input):
     results_lp = lp.search(search_input)
     results_hs = hs.search(search_input)
 
-    # Process Lifeprint results
-    if len(results_lp) > 15:
-        list_string_lp = processing.search_result_list(results_lp[:15])
-    else:
-        list_string_lp = processing.search_result_list(results_lp)
+    # Check if both sources returned no results
+    if not results_lp and not results_hs['queryResults']:
+        await ctx.send(f"No results found for '{search_input}'. Try checking Google: [ASL sign for {search_input}](https://www.google.com/search?hl=en&q=ASL+sign+for+{'+'.join(search_input.split())})")
+        return
 
-    list_string_lp = list_string_lp[:1024]  # Ensure it does not exceed the limit
+    # Process Lifeprint results
+    if results_lp:
+        if len(results_lp) > 15:
+            list_string_lp = processing.search_result_list(results_lp[:15])
+        else:
+            list_string_lp = processing.search_result_list(results_lp)
+        list_string_lp = list_string_lp[:1024]  # Ensure it does not exceed the limit
+    else:
+        list_string_lp = "No results found."
 
     # Process Handspeak results
-    if len(results_hs['queryResults']) > 10:
-        list_string_hs = processing.search_result_list(
-            results_hs['queryResults'][:10], source="hs")
+    if results_hs['queryResults']:
+        if len(results_hs['queryResults']) > 10:
+            list_string_hs = processing.search_result_list(results_hs['queryResults'][:10], source="hs")
+        else:
+            list_string_hs = processing.search_result_list(results_hs['queryResults'], source="hs")
+        list_string_hs = list_string_hs[:1024]  # Ensure it does not exceed the limit
     else:
-        list_string_hs = processing.search_result_list(
-            results_hs['queryResults'], source="hs")
+        list_string_hs = "No results found."
 
-    list_string_hs = list_string_hs[:1024]  # Ensure it does not exceed the limit
     query_formatted = '+'.join(search_input.split())
 
     embed = interactions.Embed(
